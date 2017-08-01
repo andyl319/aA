@@ -14,3 +14,19 @@ By contrast, React focuses exclusively on the creation of components, and has fe
 opinions about an application’s architecture. This allows a developer an incredible amount
 of flexibility in choosing the architecture they deem “best” — though it also places the
 responsibility of choosing (or building) those parts on the developer.
+
+
+What happens during the lifecycle of a React component?
+
+At the highest level, React components have lifecycle events that fall into three general categories:
+
+Initialization
+State/Property Updates
+Destruction
+Every React component defines these events as a mechanism for managing its properties, state, and
+rendered output. Some of these events only happen once, others happen more frequently; understanding
+these three general categories should help you clearly visualize when certain logic needs to be applied.
+
+For example, a component may need to add event listeners to the DOM when it first mounts.
+However, it should probably remove those event listeners when the component unmounts from the
+DOM so that irrelevant processing does not occur.
