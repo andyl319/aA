@@ -1,0 +1,132 @@
+The Challenges of Using var
+Before introducing const and let, it’s worth discussing why they are
+helpful or necessary in the first place. Var has been the only keyword
+for variables in JavaScript up until now but it has several drawbacks.
+
+Var scoping is confusing for devs from other languages
+The scope of var is confusing for developers coming from other languages.
+It’s quite easy for them to unintentionally cause bugs in code that uses
+if blocks or for loops. Variable declaration in ES5 and below doesn’t work
+in the way they would expect. Given JavaScript’s popularity, developers
+from other languages sometimes have to write JavaScript, and therefore
+variable scoping, which is easier to understand, would be helpful for them.
+
+Global vs. local confusion with var
+When writing JS using var, it’s difficult to immediately discern which
+variables are scoped locally vs. globally. It’s very easy to accidentally
+create a variable on the global object in JavaScript. This generally doesn’t
+affect simple demo apps but can cause problems for enterprise level applications
+as team members accidentally obliterate each other’s variables.
+
+Confusing workaround patterns
+The lack of clear global vs. local scope differentiation in JavaScript has
+forced developers to come up with patterns like the IIFE (Immediately Invoked
+Function Expression). This is an awkward workaround to the lack of block scope.
+It’s also a way to avoid attaching var-declared variables to the global object.
+
+
+If you’re not a seasoned Javascript developer, this pattern makes little sense.
+What is going on here? What are all those parentheses? Why doesn’t that
+function have a name? Block scoping should lessen the need for workaround
+design patterns like this.
+
+Misconceptions about hoisting
+Another challenge of var is that it doesn’t work in the way most developers
+think it does. The JavaScript interpreter make two passes on a section of
+JavaScript code. The first pass processes variables and function declarations
+and lifts them to the top (the ‘hoisting’). The second pass processes the
+function expressions and undeclared variables. This makes for some confusing
+code if the developer is not keenly aware of how hoisting works. Take this
+example from developer Ben Cherry’s blog:
+
+Developer Ben Cherry's example js
+
+Screenshots in this post are from Visual Studio Code in Mac
+
+code: http://codepen.io/DevelopIntelligenceBoulder/pen/obZYRY?editors=101
+
+In the above example, var foo = 10; is hoisted up to the nearest parent
+function. That’s why it alerts 10 even though you might think you would
+get a “ReferenceError: foo is not defined”. The example refactored with
+let is more intuitive.
+
+Developer Ben Cherry's example js
+
+code: http://codepen.io/DevelopIntelligenceBoulder/pen/VvVNpg?editors=101
+
+Using let
+The new ES6 keyword let allows developers to scope variables at the block level (the nearest curly brackets). If you’d like to see which browsers support let (and const) follow the Microsoft Edge page for tracking support across ES6 features. You can also check here if your current browser supports let and const.
+
+Here are some examples of let (vs. var) in different types of blocks:
+
+if block example
+
+if block example
+
+code: http://codepen.io/DevelopIntelligenceBoulder/pen/BoGEoa?editors=101
+
+In the above example, the variable is scoped to the IIFE function when it’s declared with var. Within the if block, a separate fruit variable is declared with let and scoped to the if block.
+
+for loop block example
+
+for loop block example
+
+code: http://codepen.io/DevelopIntelligenceBoulder/pen/KdrYdg?editors=101
+
+The for loop example above is a bit more interesting than the if block. By using let in the initialization expression, the i variable is scoped only to the block. By using var, the i will be scoped to the nearest function. The variable will equal 10 outside of the for loop block. This can have consequences such as creating an accidental closure as in examples like this:
+
+for loop block example
+
+code: http://codepen.io/DevelopIntelligenceBoulder/pen/XmyQXe?editors=101
+
+In this example, the code is meant to register an event listener on a simple list and alert which number was clicked. Instead, it will alert Clicked on Number: 5 for each list item. Wrapping the event listener part in a function would be a common workaround for avoiding the accidental closure.
+
+But instead, refactoring this with let (once it’s fully supported) creates a block scope in the for loop and avoids the accidental closure. It allows the expected iterator to be used within the event listener callback function.
+
+for loop block example
+
+code: http://codepen.io/DevelopIntelligenceBoulder/pen/JYeVGv?editors=101
+
+One caveat with let is that it doesn’t hoist in the same way var does. If you try to use it before it’s been declared, you will get a reference error. This has been termed the Temporal Dead Zone by one developer (the term has gained popularity since).
+
+Using const
+Like constants in other languages, const will often be used for values that won’t need to be reassigned in a program’s execution. Strings like API keys or numbers like CANVAS_HEIGHT would be uses cases of const variables that don’t need to be reassigned. Variables declared with const are often written in all caps, but this is a matter of preference.
+
+Const is the other new ES6 keyword for declaring variables. Const works like a constant in other languages in many ways but there are some caveats. Const stands for ‘constant reference’ to a value. The values that const references are not immutable (their properties can be changed). This can be explained by borrowing a metaphor from Eloquent JavaScript (a great beginner’s JS book).
+
+Eloquent Javascript’s author Marijn Haverbeke says that it’s better to think of variables as being tentacles rather than boxes.
+
+They do not contain values; they grasp them — two variables can refer to the same value. A program can access only the values that it still has a hold on. When you need to remember something, you grow a tentacle to hold on to it or you reattach one of your existing tentacles to it.
+So with const, you can actually mutate the properties of an object being referenced by the variable. You just can’t change the reference itself. Explained via the above metaphor, the tentacle won’t move or change but what it’s holding onto can. Here are some code examples of const in action:
+
+
+const PI_VALUE = 3.141592;
+
+const APIKEY = 'aekljefj3442313kalnawef';
+
+const NAMES = [];
+NAMES.push("Jim");
+console.log(NAMES.length === 1); // true
+NAMES = ["Steve", "John"]; // error
+If you want a constant to be completely immutable, use object.freeze to make the properties immutable.
+
+When to Use const vs. let
+There’s still some debate in the JavaScript community as to when to use const vs. let. Some originally recommended using let in the place of var. Others now call for defaulting to const instead of let.
+
+Reginald Braithwaite's ES6 conventions tweet
+
+JavaScript expert Reginald Braithwaite’s tweet above has been echoed by many. Developer Eric Elliot expounds upon the argument for using const before let:
+
+If I don’t need to reassign, const is my default choice over let because I want the usage to be as clear as possible in the code.
+const is a signal that the variable won’t be reassigned.
+let is a signal that the variable may be reassigned, such as a counter in a loop, or a value swap in an algorithm. It also signals that the variable will be used only in the block it’s defined in, which is not always the entire containing function.
+var is now the weakest signal available.
+Kyle Simpson (author of You Don’t Know JS) wrote some counterarguments to the enthusiasm around “let is the new var,” suggesting that the implicit nature of let declarations can cause problems in JS code. Furthermore, there are cases when var is still useful:
+
+let improves scoping options in JS, not replaces. var is still a useful signal for variables that are used throughout the function. Having both, and using both, means scoping intent is clearer to understand and maintain and enforce. That’s a big win!
+Simpson believes that let is the companion to var and that it shouldn’t be used to replace all var statements.
+
+It’s still to be determined how this debate will shake out.
+
+Summary
+Once they are supported by more browsers, const and let will allow for block scoping variables in JavaScript, rendering patterns like IIFE less necessary. Developers from other languages will likely have an easier time understanding JavaScript scoping. Developer Aaron Frost put it, cheekily, “Using LET and CONST instead of VAR will have an odd side-effect, where your code will execute at runtime just as it appears at development time.”
