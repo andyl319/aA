@@ -55,3 +55,15 @@ var link = function(height = 50, color = 'red', url = 'http://azat.co') {
   ...
 }
 By the way, this syntax is similar to Ruby!
+
+2. Template Literals in ES6
+
+Template literals or interpolation in other languages is a way to output
+variables in the string. So in ES5 we had to break the string like this:
+
+var name = 'Your name is ' + first + ' ' + last + '.'
+var url = 'http://localhost:3000/api/messages/' + id
+Luckily, in ES6 we can use a new syntax ${NAME} inside of the back-ticked string:
+
+var name = `Your name is ${first} ${last}.`
+var url = `http://localhost:3000/api/messages/${id}`
