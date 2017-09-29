@@ -91,3 +91,98 @@ var roadPoem = `Then took the other, as just as fair,
 
 var fourAgreements = `You have the right to be you.
     You can only be you when you do your best.`
+
+
+    4. Destructuring Assignment in ES6
+
+Destructuring can be a harder concept to grasp, because there’s some
+magic going on… let’s say you have simple assignments where keys house
+and mouse are variables house and mouse:
+
+var data = $('body').data(), // data has properties house and mouse
+  house = data.house,
+  mouse = data.mouse
+Other examples of destructuring assignments (from Node.js):
+
+var jsonMiddleware = require('body-parser').json
+
+var body = req.body, // body has username and password
+  username = body.username,
+  password = body.password
+In ES6, we can replace the ES5 code above with these statements:
+
+var {house, mouse} = $('body').data() // we'll get house and mouse variables
+
+var {json: jsonMiddleware} = require('body-parser')
+
+var {username, password} = req.body
+This also works with arrays. Crazy!
+
+var [col1, col2]  = $('.column'),
+  [line1, line2, line3, , line5] = file.split('\n')
+It might take some time to get use to the destructuring assignment syntax,
+but it’s a sweet sugarcoating.
+
+
+5. Enhanced Object Literals in ES6
+
+What you can do with object literals now is mind blowing! We went from a
+glorified version of JSON in ES5 to something closely resembling classes in ES6.
+
+Here’s a typical ES5 object literal with some methods and attributes/properties:
+
+var serviceBase = {port: 3000, url: 'azat.co'},
+    getAccounts = function(){return [1,2,3]}
+
+var accountServiceES5 = {
+  port: serviceBase.port,
+  url: serviceBase.url,
+  getAccounts: getAccounts,
+  toString: function() {
+    return JSON.stringify(this.valueOf())
+  },
+  getUrl: function() {return "http://" + this.url + ':' + this.port},
+  valueOf_1_2_3: getAccounts()
+}
+If we want to be fancy, we can inherit from serviceBase by making it the
+prototype with the Object.create method:
+
+var accountServiceES5ObjectCreate = Object.create(serviceBase)
+var accountServiceES5ObjectCreate = {
+  getAccounts: getAccounts,
+  toString: function() {
+    return JSON.stringify(this.valueOf())
+  },
+  getUrl: function() {return "http://" + this.url + ':' + this.port},
+  valueOf_1_2_3: getAccounts()
+}
+I know, accountServiceES5ObjectCreate and accountServiceES5 are NOT
+totally identical, because one object (accountServiceES5) will have the
+properties in the __proto__ object as shown below:
+
+Enhanced Object Literals in ES6
+Enhanced Object Literals in ES6
+
+But for the sake of the example, we’ll consider them similar. So in ES6
+object literal, there are shorthands for assignment getAccounts: getAccounts,
+becomes just getAccounts,. Also, we set the prototype right there in the
+__proto__`` property which makes sense (not‘proto’` though:
+
+var serviceBase = {port: 3000, url: 'azat.co'},
+    getAccounts = function(){return [1,2,3]}
+var accountService = {
+    __proto__: serviceBase,
+    getAccounts,
+Also, we can invoke super and have dynamic keys (valueOf_1_2_3):
+
+    toString() {
+     return JSON.stringify((super.valueOf()))
+    },
+    getUrl() {return "http://" + this.url + ':' + this.port},
+    [ 'valueOf_' + getAccounts().join('_') ]: getAccounts()
+};
+console.log(accountService)
+Enhanced Object Literals in ES6 II
+Enhanced Object Literals in ES6 II
+
+This is a great enhancement to good old object literals!
