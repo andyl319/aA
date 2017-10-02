@@ -186,3 +186,80 @@ Enhanced Object Literals in ES6 II
 Enhanced Object Literals in ES6 II
 
 This is a great enhancement to good old object literals!
+
+6. Arrow Functions in ES6
+
+This is probably one feature I waited the most. I love CoffeeScript for
+its fat arrows. Now we have them in ES6. The fat arrows are amazing because
+they would make your this behave properly, i.e., this will have the same
+value as in the context of the function—it won’t mutate. The mutation
+typically happens each time you create a closure.
+
+Using arrows functions in ES6 allows us to stop using that = this or
+self = this or _this = this or .bind(this). For example, this code in ES5 is ugly:
+
+var _this = this
+$('.btn').click(function(event){
+  _this.sendData()
+})
+This is the ES6 code without _this = this:
+
+$('.btn').click((event) =>{
+  this.sendData()
+})
+Sadly, the ES6 committee decided that having skinny arrows is too much
+of a good thing for us and they left us with a verbose old function instead.
+(Skinny arrow in CoffeeScript works like regular function in ES5 and ES6).
+
+Here’s another example in which we use call to pass the context to the
+logUpperCase() function in ES5:
+
+var logUpperCase = function() {
+  var _this = this
+
+  this.string = this.string.toUpperCase()
+  return function () {
+    return console.log(_this.string)
+  }
+}
+
+logUpperCase.call({ string: 'es6 rocks' })()
+While in ES6, we don’t need to mess around with _this:
+
+var logUpperCase = function() {
+  this.string = this.string.toUpperCase()
+  return () => console.log(this.string)
+}
+
+logUpperCase.call({ string: 'es6 rocks' })()
+Note that you can mix and match old function with => in ES6 as you see
+fit. And when an arrow function is used with one line statement, it
+becomes an expression, i.e,. it will implicitly return the result of that
+single statement. If you have more than one line, then you’ll need to use
+return explicitly.
+
+This ES5 code is creating an array from the messages array:
+
+var ids = ['5632953c4e345e145fdf2df8','563295464e345e145fdf2df9']
+var messages = ids.map(function (value) {
+  return "ID is " + value // explicit return
+})
+Will become this in ES6:
+
+var ids = ['5632953c4e345e145fdf2df8','563295464e345e145fdf2df9']
+var messages = ids.map(value => `ID is ${value}`) // implicit return
+Notice that I used the string templates? Another feature from CoffeeScript… I love them!
+
+The parenthesis () are optional for single params in an arrow function
+signature. You need them when you use more than one param.
+
+In ES5 the code has function with explicit return:
+
+var ids = ['5632953c4e345e145fdf2df8', '563295464e345e145fdf2df9'];
+var messages = ids.map(function (value, index, list) {
+  return 'ID of ' + index + ' element is ' + value + ' ' // explicit return
+})
+And more eloquent version of the code in ES6 with parenthesis around params and implicit return:
+
+var ids = ['5632953c4e345e145fdf2df8','563295464e345e145fdf2df9']
+var messages = ids.map((value, index, list) => `ID of ${index} element is ${value} `) // implicit return
