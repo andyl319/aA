@@ -263,3 +263,61 @@ And more eloquent version of the code in ES6 with parenthesis around params and 
 
 var ids = ['5632953c4e345e145fdf2df8','563295464e345e145fdf2df9']
 var messages = ids.map((value, index, list) => `ID of ${index} element is ${value} `) // implicit return
+
+7. Promises in ES6
+
+Promises have been a controversial topic. There were a lot of promise
+implementations with slightly different syntax. q, bluebird, deferred.js,
+vow, avow, jquery deferred to name just a few. Others said we don’t need
+promises and can just use async, generators, callbacks, etc. Gladly,
+there’s a standard Promise implementation in ES6 now!
+
+Let’s consider a rather trivial example of a delayed asynchronous execution
+with setTimeout():
+
+setTimeout(function(){
+  console.log('Yay!')
+}, 1000)
+We can re-write the code in ES6 with Promise:
+
+var wait1000 =  new Promise(function(resolve, reject) {
+  setTimeout(resolve, 1000)
+}).then(function() {
+  console.log('Yay!')
+})
+Or with ES6 arrow functions:
+
+var wait1000 =  new Promise((resolve, reject)=> {
+  setTimeout(resolve, 1000)
+}).then(()=> {
+  console.log('Yay!')
+})
+So far, we’ve increased the number of lines of code from three to five
+without any obvious benefit. That’s right. The benefit will come if we
+have more nested logic inside of the setTimeout() callback:
+
+setTimeout(function(){
+  console.log('Yay!')
+  setTimeout(function(){
+    console.log('Wheeyee!')
+  }, 1000)
+}, 1000)
+Can be re-written with ES6 promises:
+
+var wait1000 =  ()=> new Promise((resolve, reject)=> {setTimeout(resolve, 1000)})
+
+wait1000()
+  .then(function() {
+    console.log('Yay!')
+    return wait1000()
+  })
+  .then(function() {
+    console.log('Wheeyee!')
+  })
+Still not convinced that Promises are better than regular callbacks? Me
+neither. I think once you got the idea of callbacks and wrap your head
+around them, then there’s no need for additional complexity of promises.
+
+Nevertheless, ES6 has Promises for those of you who adore them. Promises
+have a fail-and-catch-all callback as well which is a nice feature. Take
+a look at this post for more info on promises: Introduction to ES6 Promises.
