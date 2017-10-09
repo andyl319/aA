@@ -53,3 +53,65 @@ function firstNotRepeatingCharacter(s) {
         return '_';
     }
 }
+
+
+// Note: Try to solve this task in-place (with O(1) additional memory),
+// since this is what you'll be asked to do during an interview.
+//
+// You are given an n x n 2D matrix that represents an image. Rotate the
+// image by 90 degrees (clockwise).
+
+function rotateImage(a) {
+    let newArr = [];
+
+    for(let x = 0; x < a.length; x++){
+
+        newArr.push([]);
+
+        for(let y = a.length - 1; y > -1; y--){
+
+            newArr[x].push(a[y][x]);
+        }
+    }
+
+    return newArr;
+}
+
+
+// You are climbing a staircase that has n steps. You can take the steps
+// either 1 or 2 at a time. Calculate how many distinct ways you can climb
+// to the top of the staircase.
+//
+// Example
+//
+// For n = 1, the output should be
+// climbingStairs(n) = 1;
+//
+// For n = 2, the output should be
+// climbingStairs(n) = 2.
+//
+// You can either climb 2 steps at once or climb 1 step two times.
+
+function climbingStairs(n) {
+
+
+    let first = 1;
+    let second = 2;
+
+    if(n === 1){
+        return 1;
+    }
+
+    if(n === 2){
+        return 2;
+    }
+
+    for(let x = 3; x <= n; x++){
+        let third = first + second;
+
+        first = second;
+        second = third;
+    }
+
+    return second;
+}
