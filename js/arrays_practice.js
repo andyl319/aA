@@ -21,3 +21,35 @@ function firstDuplicate(a) {
 
     return -1;
 }
+
+
+// Note: Write a solution that only iterates over the string once and uses
+// O(1) additional memory, since this is what you would be asked to do
+// during a real interview.
+//
+// Given a string s, find and return the first instance of a non-repeating
+// character in it. If there is no such character, return '_'.
+
+function firstNotRepeatingCharacter(s) {
+
+    let dups = {};
+    let x = 0;
+    let y = 1;
+
+    while(y < s.length){
+
+        if(s[y] === s[x] || dups[s[x]] === true){
+            dups[s[x]] = true;
+            x++;
+            y = x+1;
+        } else {
+            y++;
+        }
+    }
+
+    if(dups[s[x]] === undefined){
+        return s[x];
+    } else {
+        return '_';
+    }
+}
