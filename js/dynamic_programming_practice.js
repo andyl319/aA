@@ -70,3 +70,42 @@ function houseRobber(nums) {
 
     return Math.max(robbedPrev, notRobbedPrev);
 }
+
+
+// Given a sorted integer array that does not contain any duplicates,
+// return a summary of the number ranges it contains.
+//
+// Example
+//
+// For nums = [-1, 0, 1, 2, 6, 7, 9], the output should be
+// composeRanges(nums) = ["-1->2", "6->7", "9"].
+
+function composeRanges(nums) {
+
+    let stringArr = [];
+    let firstNum = nums[0];
+    let prevNum = nums[0];
+    let currStr = `${nums[0]}`;
+
+    if(nums.length === 0){
+        return [];
+    }
+
+    for(let x = 1; x < nums.length; x++){
+
+        if(nums[x] - 1 === prevNum){
+            currStr = `${firstNum}->${nums[x]}`;
+
+        } else {
+            stringArr.push(currStr);
+            currStr = `${nums[x]}`;
+            firstNum = nums[x];
+        }
+
+        prevNum = nums[x];
+    }
+
+    stringArr.push(currStr);
+
+    return stringArr;
+}
